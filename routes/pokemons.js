@@ -13,15 +13,14 @@ router.get('/', async (req, res) => {
     const pokemons = await Pokemon.find({
         $or: [
             { idPokemon: +id || 0 },
-            { idPokemon: {$gte: +fromId||0, $lte: +toId||0 }},
+            { idPokemon: {$gte: +fromId||0, $lte: +toId||Number.MAX_VALUE }},
             { name: { $regex: new RegExp(`^${name||''}$`, "i") } }
         ]
     });
 
     const length = pokemons.length;
 
-    if (length > 1) res.json({ result: true, length, pokemons });
-    else if (length === 1) res.json({result: true, pokemon: pokemons[0]});
+    if (length > 0) res.json({ result: true, length, pokemons });
     else res.json({ result: false, error: "Pokemon not found" });
 });
 
